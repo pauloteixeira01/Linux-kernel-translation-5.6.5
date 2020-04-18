@@ -105,7 +105,7 @@ Instalando a fonte do kernel
  - Verifique se você não tem arquivos .o obsoletos e dependências por aí:
 
      cd linux
-     fazer mrproper
+     make mrproper
 
    Agora você deve ter as fontes corretamente instaladas.
 
@@ -185,7 +185,7 @@ Configurando o kernel
                         Use "make help" para obter uma lista de todos os disponíveis
                         plataformas da sua arquitetura.
 
-     "faça allyesconfig"
+     "make allyesconfig"
                         Crie um arquivo ./.config configurando o símbolo
                         valores para 'y' o máximo possível.
 
