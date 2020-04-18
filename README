@@ -31,9 +31,9 @@ Em que hardware ele roda?
 
   O Linux é facilmente portátil para a maioria das arquiteturas de 32 ou 64 bits de uso geral
   desde que tenham uma unidade de gerenciamento de memória paginável (PMMU) e uma porta do
-  Compilador GNU C (gcc) (parte de The GNU Compiler Collection, GCC). Linux tem
+  Compilador GNU C (gcc) (parte de The GNU Compiler Collection, GCC). Linux
   também foi portado para várias arquiteturas sem uma PMMU, embora
-  obviamente, a funcionalidade é um pouco limitada.
+  obviamente, a funcionalidade seja um pouco limitada.
   O Linux também foi portado para si mesmo. Agora você pode executar o kernel como um
   aplicativo userspace - isso é chamado de UserMode Linux (UML).
 
