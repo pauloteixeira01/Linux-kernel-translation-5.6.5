@@ -40,18 +40,18 @@ Em que hardware ele roda?
 Documentação
 -------------
 
- - Existe muita documentação disponível tanto em formato eletrônico no
+ - Existe muita documentação disponível tanto em formato eletrônico na
    Internet e em livros, específicos para Linux e pertencentes a
    perguntas gerais sobre o UNIX. Eu recomendo olhar para a documentação
    subdiretórios em qualquer site FTP do Linux para o LDP (Linux Documentation
-   Projeto). Este README não pretende ser documentação no
+   Projeto). Este README não pretende ser uma documentação do
    sistema: existem fontes muito melhores disponíveis.
 
- - Existem vários arquivos LEIA-ME no subdiretório Documentação:
+ - Existem vários arquivos 'LEIA-ME' no subdiretório Documentação:
    normalmente contêm notas de instalação específicas do kernel para alguns
    drivers, por exemplo. Por favor, leia o
    : ref: `Documentação / processo / changes.rst <changes>`, como ele
-   contém informações sobre os problemas, que podem resultar da atualização
+   contém informações sobre os problemas, que podem resultar da atualização do
    seu kernel.
 
 Instalando a fonte do kernel
