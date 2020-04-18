@@ -1,0 +1,407 @@
+Versão 5.x do kernel do Linux <http://kernel.org/>
+===============================================
+
+Estas são as notas de lançamento do Linux versão 5. Leia-as cuidadosamente,
+como elas explicam o que é isso, como instalar o
+e o que fazer se algo der errado.
+
+O que é o Linux?
+--------------
+
+  Linux é um clone do sistema operacional Unix, escrito do zero por
+  Linus Torvalds, com a assistência de uma equipe pouco unida de hackers
+  a rede. Ele visa a conformidade com as especificações POSIX e Single UNIX.
+
+  Ele tem todos os recursos que você esperaria de um moderno Unix de pleno direito,
+  incluindo multitarefa verdadeira, memória virtual, bibliotecas compartilhadas, demanda
+  executáveis ​​de cópia na gravação compartilhados, gerenciamento adequado de memória,
+  e redes multipista, incluindo IPv4 e IPv6.
+
+  Ele é distribuído sob a Licença Pública Geral GNU v2 - veja o
+  arquivo COPYING que o acompanha para obter mais detalhes.
+
+Em que hardware ele roda?
+-----------------------------
+
+  Embora tenha sido originalmente desenvolvido primeiro para PCs baseados em x86 de 32 bits (386 ou superior),
+  hoje o Linux também roda (pelo menos) no Compaq Alpha AXP, Sun SPARC e
+  UltraSPARC, Motorola 68000, PowerPC, PowerPC64, ARM, Hitachi SuperH, Celular,
+  IBM S / 390, MIPS, HP PA-RISC, Intel IA-64, DEC VAX, AMD x86-64 Xtensa e
+  Arquiteturas ARC.
+
+  O Linux é facilmente portátil para a maioria das arquiteturas de 32 ou 64 bits de uso geral
+  desde que tenham uma unidade de gerenciamento de memória paginável (PMMU) e uma porta do
+  Compilador GNU C (gcc) (parte de The GNU Compiler Collection, GCC). Linux tem
+  também foi portado para várias arquiteturas sem uma PMMU, embora
+  obviamente, a funcionalidade é um pouco limitada.
+  O Linux também foi portado para si mesmo. Agora você pode executar o kernel como um
+  aplicativo userspace - isso é chamado de UserMode Linux (UML).
+
+Documentação
+-------------
+
+ - Existe muita documentação disponível tanto em formato eletrônico no
+   Internet e em livros, específicos para Linux e pertencentes a
+   perguntas gerais sobre o UNIX. Eu recomendo olhar para a documentação
+   subdiretórios em qualquer site FTP do Linux para o LDP (Linux Documentation
+   Projeto). Este README não pretende ser documentação no
+   sistema: existem fontes muito melhores disponíveis.
+
+ - Existem vários arquivos LEIA-ME no subdiretório Documentação:
+   normalmente contêm notas de instalação específicas do kernel para alguns
+   drivers, por exemplo. Por favor, leia o
+   : ref: `Documentação / processo / changes.rst <changes>`, como ele
+   contém informações sobre os problemas, que podem resultar da atualização
+   seu kernel.
+
+Instalando a fonte do kernel
+----------------------------
+
+ - Se você instalar os fontes completos, coloque o tarball do kernel em um
+   diretório em que você tem permissões (por exemplo, seu diretório inicial) e
+   descompacte-o ::
+
+     xz -cd linux-5.x.tar.xz | tar xvf -
+
+   Substitua "X" pelo número da versão do kernel mais recente.
+
+   NÃO use a área / usr / src / linux! Esta área possui (normalmente
+   incompleto) conjunto de cabeçalhos do kernel usados ​​pelo cabeçalho da biblioteca
+   arquivos. Eles devem corresponder à biblioteca e não ficarem bagunçados
+   qualquer que seja o kernel-du-jour.
+
+ - Você também pode atualizar entre as versões 5.x corrigindo os patches. Patches são
+   distribuído no formato xz. Para instalar o patch, obtenha todas as
+   arquivos de correção mais recentes, digite o diretório de nível superior da fonte do kernel
+   (linux-5.x) e execute:
+
+     xz -cd ../patch-5.x.xz | patch -p1
+
+   Substitua "x" por todas as versões maiores que a versão "x" do seu atual
+   árvore de origem, ** in_order **, e você deve estar bem. Você pode remover
+   os arquivos de backup (some-file-name ~ ou some-file-name.orig) e verifique se
+   que não há correções com falha (some-file-name # ou some-file-name.rej).
+   Se houver, você ou eu cometemos um erro.
+
+   Diferentemente dos patches para os kernels 5.x, os patches para os kernels 5.x.y
+   (também conhecidos como kernels -stable) não são incrementais, mas aplicam-se
+   diretamente ao kernel base 5.x. Por exemplo, se o seu kernel base for 5.0
+   e você deseja aplicar o patch 5.0.3, não deve primeiro aplicar o 5.0.1
+   e patches 5.0.2. Da mesma forma, se você estiver executando a versão 5.0.2 do kernel e
+   Para pular para 5.0.3, primeiro você deve reverter o patch 5.0.2 (ou seja,
+   patch -R) ** antes ** de aplicar o patch 5.0.3. Você pode ler mais sobre isso em
+   : ref: `Documentação / processo / apply-patches.rst <applying_patches>`.
+
+   Como alternativa, o script patch-kernel pode ser usado para automatizar esse
+   processo. Ele determina a versão atual do kernel e aplica qualquer
+   patches encontrados ::
+
+     linux / scripts / patch-kernel linux
+
+  O primeiro argumento no comando acima é a localização do
+   fonte do kernel. Os patches são aplicados no diretório atual, mas
+   um diretório alternativo pode ser especificado como o segundo argumento.
+
+ - Verifique se você não tem arquivos .o obsoletos e dependências por aí:
+
+     cd linux
+     fazer mrproper
+
+   Agora você deve ter as fontes corretamente instaladas.
+
+Requisitos de software
+---------------------
+
+   Compilar e executar os kernels 5.x requer atualização
+   versões de vários pacotes de software. Consultar
+   : ref: `Documentation / process / changes.rst <changes>` para os números mínimos de versão
+   necessário e como obter atualizações para esses pacotes. Cuidado ao usar
+   versões excessivamente antigas desses pacotes podem causar
+   erros que são muito difíceis de rastrear, então não assuma que
+   basta atualizar os pacotes quando surgirem problemas óbvios durante
+   construção ou operação.
+
+Diretório de construção para o kernel
+------------------------------
+
+   Ao compilar o kernel, todos os arquivos de saída serão, por padrão,
+   armazenado junto com o código fonte do kernel.
+   Usar a opção `` make O = output / dir`` permite especificar uma alternativa
+   local para os arquivos de saída (incluindo .config).
+   Exemplo::
+
+     código fonte do kernel: /usr/src/linux-5.x
+     diretório de construção: / home / name / build / kernel
+
+   Para configurar e construir o kernel, use:
+
+     cd /usr/src/linux-5.x
+     make O = / home / name / build / kernel menuconfig
+     make O = / home / name / build / kernel
+     sudo make O = / home / nome / build / módulos do kernel_install install
+
+   Observe: Se a opção `` O = output / dir`` for usada, ela deverá ser
+   usado para todas as invocações de make.
+
+Configurando o kernel
+----------------------
+
+   Não pule esta etapa mesmo se estiver atualizando apenas um menor
+   versão. Novas opções de configuração são adicionadas em cada release e
+   problemas estranhos aparecerão se os arquivos de configuração não estiverem configurados
+   como esperado. Se você deseja levar sua configuração existente para um
+   nova versão com o mínimo de trabalho, use `` make oldconfig``, que irá
+   peça apenas respostas para novas perguntas.
+
+ - Comandos de configuração alternativos são:
+
+     "make config" Interface de texto simples.
+
+     "make menuconfig" Menus, radiolistas e caixas de diálogo em cores baseadas em texto.
+
+     "make nconfig" Menus de cores aprimorados baseados em texto.
+
+     "make xconfig" Ferramenta de configuração baseada em Qt.
+
+     "make gconfig" Ferramenta de configuração baseada em GTK +.
+
+     "make oldconfig" Padrão todas as perguntas com base no conteúdo de
+                        seu arquivo ./.config existente e perguntando sobre
+                        novos símbolos de configuração.
+
+     "make olddefconfig"
+                        Como acima, mas define novos símbolos para o padrão
+                        valores sem avisar.
+
+     "make defconfig" Crie um arquivo ./.config usando o padrão
+                        valores de símbolo de arch / $ ARCH / defconfig
+                        ou arch / $ ARCH / configs / $ {PLATFORM} _defconfig,
+                        dependendo da arquitetura.
+
+     "make $ {PLATFORM} _defconfig"
+                        Crie um arquivo ./.config usando o padrão
+                        valores de símbolo de
+                        arch / $ ARCH / configs / $ {PLATAFORMA} _defconfig.
+                        Use "make help" para obter uma lista de todos os disponíveis
+                        plataformas da sua arquitetura.
+
+     "faça allyesconfig"
+                        Crie um arquivo ./.config configurando o símbolo
+                        valores para 'y' o máximo possível.
+
+     "make allmodconfig"
+                        Crie um arquivo ./.config configurando o símbolo
+                        valores para 'm', tanto quanto possível.
+
+     "make allnoconfig" Crie um arquivo ./.config configurando o símbolo
+                        valores para 'n' o máximo possível.
+
+     "make randconfig" Crie um arquivo ./.config configurando o símbolo
+                        valores para valores aleatórios.
+
+     "make localmodconfig" Crie uma configuração baseada na configuração atual e
+                           módulos carregados (lsmod). Desativa qualquer módulo
+                           opção que não é necessária para os módulos carregados.
+
+                           Para criar um localmodconfig para outra máquina,
+                           armazene o lsmod dessa máquina em um arquivo
+                           e transmita-o como um parâmetro LSMOD.
+
+                   target $ lsmod> / tmp / mylsmod
+                   host $ scp / tmp / mylsmod de destino: / tmp
+
+                   host $ make LSMOD = / tmp / mylsmod localmodconfig
+
+                           O acima também funciona quando a compilação cruzada.
+
+     "make localyesconfig" Semelhante ao localmodconfig, exceto que ele converterá
+                           todas as opções de módulo para opções incorporadas (= y).
+
+     "make kvmconfig" Ative opções adicionais para suporte ao kvm guest kernel.
+
+     "make xenconfig" Habilite opções adicionais para o kernel convidado xen dom0
+                        Apoio, suporte.
+
+     "make tinyconfig" Configure o menor kernel possível.
+
+   Você pode encontrar mais informações sobre o uso das ferramentas de configuração do kernel do Linux
+   em Documentação / kbuild / kconfig.rst.
+
+ - NOTAS em `` make config``:
+
+    - Ter drivers desnecessários aumentará o kernel e poderá
+      Em algumas circunstâncias, surgem problemas: a procura de um
+      uma placa controladora inexistente pode confundir seus outros controladores.
+
+    - Um kernel com emulação matemática compilado ainda usará o
+      coprocessador, se houver um: a emulação matemática será
+      nunca se acostume nesse caso. O kernel será um pouco maior,
+      mas funcionará em máquinas diferentes, independentemente de
+      tenha um coprocessador matemático ou não.
+
+    - Os detalhes da configuração "kernel hacking" geralmente resultam em uma
+      kernel maior ou mais lento (ou ambos) e pode até torná-lo
+      menos estável, configurando algumas rotinas para tentar ativamente
+      quebra o código incorreto para encontrar problemas do kernel (kmalloc ()). Assim você
+      provavelmente deveria responder 'n' às perguntas para "desenvolvimento",
+      recursos "experimental" ou "depuração".
+
+Compilando o kernel
+--------------------
+
+ - Verifique se você tem pelo menos o gcc 4.6 disponível.
+   Para mais informações, consulte: ref: `Documentation / process / changes.rst <changes>`.
+
+   Observe que você ainda pode executar a.out programas de usuário com este kernel.
+
+ - Faça um `` make`` para criar uma imagem de kernel compactada. Isso é também
+   possível fazer `` make install`` se você tiver o lilo instalado para se adequar ao
+   makefiles do kernel, mas você pode verificar primeiro sua configuração específica do lilo.
+
+   Para fazer a instalação real, você precisa ser root, mas nenhuma das configurações normais
+   construir deve exigir isso. Não tome o nome de raiz em vão.
+
+ - Se você configurou alguma das partes do kernel como `` modules``, você
+   também terá que fazer `` make modules_install``.
+
+ - Saída compilada / compilada do kernel:
+
+   Normalmente, o sistema de compilação do kernel é executado em um modo bastante silencioso (mas não
+   totalmente silencioso). No entanto, às vezes você ou outros desenvolvedores de kernel precisam
+   para ver compilar, vincular ou outros comandos exatamente como são executados.
+   Para isso, use o modo de construção "detalhado". Isso é feito passando
+   `` V = 1`` para o comando `` make``, por exemplo:
+
+     faça V = 1 all
+
+   Para ter o sistema de construção, informe também o motivo da reconstrução de cada
+   alvo, use `` V = 2``. O padrão é `` V = 0``.
+
+ - Mantenha um kernel de backup à mão, caso algo dê errado. Isto é
+   especialmente verdadeiro para as versões de desenvolvimento, pois cada nova versão
+   contém novo código que não foi depurado. Certifique-se de manter um
+   backup dos módulos correspondentes a esse kernel também. Se vocês
+   está instalando um novo kernel com o mesmo número de versão que o seu
+   trabalhando, faça um backup do diretório de módulos antes de
+   faça um `` make modules_install``.
+
+   Como alternativa, antes de compilar, use a opção de configuração do kernel
+   "LOCALVERSION" para acrescentar um sufixo exclusivo à versão normal do kernel.
+   LOCALVERSION pode ser definido no menu "Configuração geral".
+
+ - Para inicializar seu novo kernel, você precisará copiar o kernel
+   image (por exemplo ... / linux / arch / x86 / boot / bzImage após a compilação)
+   para o local onde seu kernel inicializável comum é encontrado.
+
+ - Inicializando um kernel diretamente de um disquete sem a ajuda de um
+   gerenciador de inicialização como o LILO, não é mais suportado.
+
+   Se você inicializar o Linux a partir do disco rígido, é provável que você use o LILO, que
+   usa a imagem do kernel conforme especificado no arquivo /etc/lilo.conf. o
+   O arquivo de imagem do kernel geralmente é / vmlinuz, / boot / vmlinuz, / bzImage ou
+   / boot / bzImage. Para usar o novo kernel, salve uma cópia da imagem antiga
+   e copie a nova imagem sobre a antiga. Então, você deve executar novamente o LILO
+   para atualizar o mapa de carregamento! Caso contrário, você não poderá inicializar
+   a nova imagem do kernel.
+
+   Reinstalar o LILO geralmente é uma questão de executar / sbin / lilo.
+   Você pode editar o /etc/lilo.conf para especificar uma entrada para o seu
+   imagem antiga do kernel (por exemplo, /vmlinux.old), caso a nova não
+   trabalhos. Veja os documentos do LILO para mais informações.
+
+   Depois de reinstalar o LILO, você deve estar pronto. Desligue o sistema,
+   reinicie e divirta-se!
+
+   Se você precisar alterar o dispositivo raiz padrão, o modo de vídeo,
+   tamanho do ramdisk, etc. na imagem do kernel, use o programa `` rdev`` (ou
+   alternativamente, as opções de inicialização do LILO, quando apropriado). Não precisa de
+   recompile o kernel para alterar esses parâmetros.
+
+ - Reinicie com o novo kernel e aproveite.
+
+Se algo der errado
+-----------------------
+
+ - Se você tiver problemas que parecem ocorrer devido a erros do kernel, verifique
+   o arquivo MAINTAINERS para ver se há uma pessoa específica associada
+   com a parte do kernel com a qual você está tendo problemas. Se lá
+   não há ninguém listado lá, então a segunda melhor coisa é enviar
+   para mim (torvalds@linux-foundation.org) e possivelmente para qualquer outro
+   lista de discussão relevante ou para o grupo de notícias.
+
+ - Em todos os relatórios de erros, * por favor * diga sobre o kernel que você está falando,
+   como duplicar o problema e qual é a sua configuração (use o seu
+   sentido). Se o problema for novo, diga-me, e se o problema for
+   idade, por favor, tente me dizer quando você o notou.
+
+ - Se o erro resultar em uma mensagem como:
+
+     Não é possível lidar com a solicitação de paginação do kernel no endereço C0000010
+     Ops: 0002
+     EIP: 0010: XXXXXXXX
+     eax: xxxxxxxx ebx: xxxxxxxx ecx: xxxxxxxx edx: xxxxxxxx
+     esi: xxxxxxxx edi: xxxxxxxx ebp: xxxxxxxx
+     ds: xxxx es: xxxx fs: xxxx gs: xxxx
+     Pid: xx, processo nr: xx
+     xx xx xx xx xx xx xx xx xx xx
+
+   informações de depuração do kernel ou similar na tela ou no seu
+   log do sistema, duplique-o * exatamente *. O despejo pode parecer
+   incompreensível para você, mas contém informações que podem
+   ajudar a depurar o problema. O texto acima do despejo também é
+   importante: diz algo sobre por que o código despejado do kernel (em
+   o exemplo acima, é devido a um ponteiro incorreto do kernel). Mais Informações
+   sobre como entender o despejo está em Documentation / admin-guide / bug-hunting.rst
+
+ - Se você compilou o kernel com CONFIG_KALLSYMS, pode enviar o dump
+   como está, caso contrário, você terá que usar o programa `` ksymoops`` para fazer
+   senso do dump (mas geralmente é preferível compilar com CONFIG_KALLSYMS).
+   Este utilitário pode ser baixado em
+   https://www.kernel.org/pub/linux/utils/kernel/ksymoops/.
+   Como alternativa, você pode fazer a pesquisa de despejo manualmente:
+
+ - Na depuração de despejos como o descrito acima, ajuda enormemente se você puder
+   procure o que o valor EIP significa. O valor hexadecimal, como tal, não ajuda
+   eu ou qualquer outra pessoa: dependerá do seu particular
+   configuração do kernel. O que você deve fazer é obter o valor hexadecimal do EIP
+   (ignore o `` 0010: ``) e procure-o na lista de nomes do kernel para
+   veja qual função do kernel contém o endereço incorreto.
+
+   Para descobrir o nome da função do kernel, você precisará encontrar o sistema
+   binário associado ao kernel que exibiu o sintoma. Isto é
+   o arquivo 'linux / vmlinux'. Para extrair a lista de nomes e compará-la com
+   o EIP da falha do kernel, faça:
+
+     nm vmlinux | sort | less
+
+   Isso fornecerá uma lista de endereços do kernel classificados em ordem crescente
+   ordem, a partir da qual é simples encontrar a função que contém o
+   endereço incorreto. Observe que o endereço fornecido pelo kernel
+   mensagens de depuração não necessariamente corresponderão exatamente ao
+   endereços de função (na verdade, isso é muito improvável), então você não pode
+   apenas 'grep' a lista: a lista, no entanto, dará a você o início
+   ponto de cada função do kernel, procurando a função que
+   tem um endereço inicial inferior ao que você está procurando, mas
+   é seguido por uma função com um endereço mais alto, você encontrará o
+   você quer. De fato, pode ser uma boa ideia incluir um pouco de
+   "contexto" no seu relatório de problemas, fornecendo algumas linhas ao redor do
+   interessante.
+
+   Se, por algum motivo, você não puder fazer o que precede (você tem um
+   imagem do kernel ou similar), informando-me tanto sobre sua configuração quanto
+   possível vai ajudar. Por favor, leia o: ref: `admin-guide / reporting-bugs.rst <reportingbugs>`
+   documento para obter detalhes.
+
+ - Como alternativa, você pode usar o gdb em um kernel em execução. (somente leitura; ou seja, você
+   não pode alterar valores ou definir pontos de interrupção.) Para fazer isso, primeiro compile o
+   kernel com -g; edite o arch / x86 / Makefile adequadamente e faça um `` make
+   clean``. Você também precisará ativar o CONFIG_PROC_FS (via `` make config``).
+
+   Depois de reiniciar com o novo kernel, faça `` gdb vmlinux / proc / kcore``.
+   Agora você pode usar todos os comandos gdb habituais. O comando para procurar o
+   O ponto em que seu sistema travou é `` l * 0xXXXXXXXX``. (Substitua os XXXes
+   com o valor EIP.)
+
+   gdb'ing um kernel não rodando atualmente falha porque `` gdb`` (incorretamente)
+   desconsidera o deslocamento inicial para o qual o kernel é compilado.
+ 
