@@ -1,3 +1,7 @@
+/**
+*Essa documentação encontra-se em: linux-5.6.5/Documentation/admin-guide/README.rst
+*/
+
 Versão 5.x do kernel do Linux <http://kernel.org/>
 ===============================================
 
@@ -272,7 +276,7 @@ Compilando o kernel
    Para isso, use o modo de construção "detalhado". Isso é feito passando
    `` V = 1`` para o comando `` make``, por exemplo:
 
-     faça V = 1 all
+     make V = 1 all
 
    Para ter o sistema de construção, informe também o motivo da reconstrução de cada
    alvo, use `` V = 2``. O padrão é `` V = 0``.
